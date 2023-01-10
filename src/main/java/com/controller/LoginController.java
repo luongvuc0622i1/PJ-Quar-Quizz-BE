@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.model.dto.LoginForm;
+import com.model.dto.RegisterForm;
 import com.model.jwt.AppUser;
 import com.model.jwt.MessageResponse;
 import com.model.jwt.Role;
@@ -51,11 +52,24 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody AppUser user) {
-        if (userService.getUserByUsername(user.getUsername()) == null) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterForm registerForm) {
+        if (userService.existsByEmail(registerForm.getEmail()) && userService.existsByUsername(registerForm.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("email & username are exist in db"));
+        } else if (userService.existsByEmail(registerForm.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("email is exist in db"));
+        } else if (userService.existsByUsername(registerForm.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("user is exist in db"));
+        } else if (registerForm.getPassword() != registerForm.getRepassword()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("repassword not match"));
+        } else {
+            AppUser user = new AppUser();
+            user.setEmail(registerForm.getEmail());
+            user.setUsername(registerForm.getUsername());
+            user.setPassword(registerForm.getPassword());
             Set<Role> roles = new HashSet<>();
             roles.add(roleService.findById(3L).get());
             user.setRoles(roles);
+            user.setStatus("1");
             AppUser appUser = userService.save(user);
 //            Mail mail = new Mail();
 //            mail.setMailTo(user.getEmail());
@@ -68,20 +82,5 @@ public class LoginController {
 //            mailService.sendEmail(mail);
             return new ResponseEntity<>(appUser, HttpStatus.OK);
         }
-        if (userService.existsByUsername(user.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("nouser"));
-        }
-        if (userService.existsByEmail(user.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("noemail"));
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
-    @GetMapping("/allu")
-    public ResponseEntity<Iterable<AppUser>> getAll() {
-        Iterable<AppUser> userList = userService.findAll();
-        System.out.println(userList);
-        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }

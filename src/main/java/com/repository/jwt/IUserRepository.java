@@ -38,10 +38,10 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
     void lockAccountById(Long statusId);
 
     @Modifying
-    @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 2 where users.username = :name", nativeQuery = true )
-    void changeManager(String name);
+    @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 2 where users.id = :id", nativeQuery = true )
+    void changeToManager(Long id);
 
     @Modifying
-    @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 3 where users.username = :name", nativeQuery = true )
-    void changeUser(String name);
+    @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 3 where users.id = :id", nativeQuery = true )
+    void changeToUser(Long id);
 }

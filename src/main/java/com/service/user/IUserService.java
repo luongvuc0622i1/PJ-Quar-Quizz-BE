@@ -23,8 +23,8 @@ public interface IUserService extends IGeneralService<AppUser>, UserDetailsServi
     void openAccountById(Long id);
     void lockAccountById(Long id);
 
-    void changeManager(String name);
-    void changeUser(String name);
+    void changeToManager(Long id);
+    void changeToUser(Long id);
 
     String randomPassword();
 }

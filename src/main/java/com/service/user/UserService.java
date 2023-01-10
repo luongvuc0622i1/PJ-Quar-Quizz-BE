@@ -100,13 +100,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void changeManager(String name) {
-        userRepository.changeManager(name);
+    public void changeToManager(Long id) {
+        userRepository.changeToManager(id);
     }
 
     @Override
-    public void changeUser(String name) {
-        userRepository.changeUser(name);
+    public void changeToUser(Long id) {
+        userRepository.changeToUser(id);
     }
 
     @Override

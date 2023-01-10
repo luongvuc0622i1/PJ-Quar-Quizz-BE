@@ -84,14 +84,17 @@ public class UserService implements IUserService {
     public Iterable<AppUser> findAppUserByRolesUser() {
         return userRepository.findAppUserByRolesUser();
     }
+
     @Override
     public Iterable<AppUser> findAppUserByRolesUserManager() {
         return userRepository.findAppUserByRolesUserManager();
     }
+
     @Override
     public void lockAccountById(Long id){
         userRepository.lockAccountById(id);
     }
+
     @Override
     public void openAccountById(Long id){
         userRepository.openAccountById(id);

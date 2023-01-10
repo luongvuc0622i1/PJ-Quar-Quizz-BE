@@ -28,18 +28,20 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
             "JOIN role ON users_roles.roles_id = role.id " +
             "WHERE roles_id = 3 OR roles_id = 2;")
     Iterable<AppUser> findAppUserByRolesUserManager();
+
     @Modifying
     @Query(value = "UPDATE users SET status = '1' WHERE id = :statusId", nativeQuery = true)
     void openAccountById(Long statusId);
+
     @Modifying
     @Query(value = "UPDATE users SET status = '0' WHERE id = :statusId", nativeQuery = true)
     void lockAccountById(Long statusId);
+
     @Modifying
     @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 2 where users.username = :name", nativeQuery = true )
     void changeManager(String name);
-    @Modifying
 
+    @Modifying
     @Query(value = "UPDATE users_roles join users on users_roles.app_user_id = users.id set users_roles.roles_id = 3 where users.username = :name", nativeQuery = true )
     void changeUser(String name);
-    AppUser findByEmail(String email);
 }

@@ -1,11 +1,13 @@
 package com.controller;
 
 import com.model.dto.LoginForm;
+import com.model.dto.Mail;
 import com.model.dto.RegisterForm;
 import com.model.jwt.AppUser;
 import com.model.jwt.MessageResponse;
 import com.model.jwt.Role;
 import com.service.jwt.JwtService;
+import com.service.mail.IMailService;
 import com.service.role.IRoleService;
 import com.service.role.RoleService;
 import com.service.user.IUserService;
@@ -38,6 +40,9 @@ public class LoginController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private IMailService mailService;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginForm loginForm) {
         // Tạo 1 đối tượng authentication
@@ -59,7 +64,7 @@ public class LoginController {
             return ResponseEntity.badRequest().body(new MessageResponse("email is exist in db"));
         } else if (userService.existsByUsername(registerForm.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("user is exist in db"));
-        } else if (registerForm.getPassword() != registerForm.getRepassword()) {
+        } else if (!registerForm.getPassword().equals(registerForm.getRepassword())) {
             return ResponseEntity.badRequest().body(new MessageResponse("repassword not match"));
         } else {
             AppUser user = new AppUser();
@@ -71,15 +76,15 @@ public class LoginController {
             user.setRoles(roles);
             user.setStatus("1");
             AppUser appUser = userService.save(user);
-//            Mail mail = new Mail();
-//            mail.setMailTo(user.getEmail());
-//            mail.setMailFrom("quarquizteam@gmail.com");
-//            mail.setMailSubject("Thanks for signing up.");
-//            mail.setMailContent("Hello " + user.getUsername() + "," + "\n\nThank you for signing up for our team!" +
-//                    "We are looking forward to seeing you there.\n\n" +
-//                    "Best, \n" +
-//                    "Quarquizzteam");
-//            mailService.sendEmail(mail);
+            Mail mail = new Mail();
+            mail.setMailTo(user.getEmail());
+            mail.setMailFrom("quarquizteam@gmail.com");
+            mail.setMailSubject("Thanks for signing up.");
+            mail.setMailContent("Hello " + user.getUsername() + "," + "\n\nThank you for signing up for our team!" +
+                    "We are looking forward to seeing you there.\n\n" +
+                    "Best, \n" +
+                    "Quarquizzteam");
+            mailService.sendEmail(mail);
             return new ResponseEntity<>(appUser, HttpStatus.OK);
         }
     }

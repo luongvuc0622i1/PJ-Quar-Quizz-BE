@@ -81,13 +81,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Iterable<AppUser> findAppUserByRolesUser() {
-        return userRepository.findAppUserByRolesUser();
+    public Iterable<AppUser> managerFindAll() {
+        return userRepository.managerFindAll();
     }
 
-    @Override
-    public Iterable<AppUser> findAppUserByRolesUserManager() {
-        return userRepository.findAppUserByRolesUserManager();
+    public Iterable<AppUser> adminFindAll() {
+        return userRepository.adminFindAll();
     }
 
     @Override

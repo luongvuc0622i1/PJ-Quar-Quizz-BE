@@ -21,13 +21,13 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
             "JOIN users_roles ON users.id = users_roles.app_user_id " +
             "JOIN role ON users_roles.roles_id = role.id " +
             "WHERE roles_id = 3;")
-    Iterable<AppUser> findAppUserByRolesUser();
+    Iterable<AppUser> managerFindAll();
 
     @Query(nativeQuery = true, value = "SELECT * FROM users " +
             "JOIN users_roles ON users.id = users_roles.app_user_id " +
             "JOIN role ON users_roles.roles_id = role.id " +
             "WHERE roles_id = 3 OR roles_id = 2;")
-    Iterable<AppUser> findAppUserByRolesUserManager();
+    Iterable<AppUser> adminFindAll();
 
     @Modifying
     @Query(value = "UPDATE users SET status = '1' WHERE id = :statusId", nativeQuery = true)

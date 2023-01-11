@@ -1,7 +1,11 @@
 package com.controller;
 
+import com.model.dto.ChangePassForm;
+import com.model.dto.Mail;
 import com.model.jwt.AppUser;
+import com.model.jwt.MessageResponse;
 import com.model.jwt.Role;
+import com.service.mail.IMailService;
 import com.service.role.IRoleService;
 import com.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,8 +23,12 @@ import java.util.Set;
 public class UserController {
     @Autowired
     private IRoleService roleService;
+
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IMailService mailService;
 
     @GetMapping("/manager/users")
     public ResponseEntity<Iterable<AppUser>> managerGetAll() {
@@ -43,6 +52,29 @@ public class UserController {
 //        }
 //        return new ResponseEntity<>(optional.get(), HttpStatus.OK);
 //    }
+
+    @PutMapping("/user/changePassword/{id}")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @Valid @RequestBody ChangePassForm changPassForm) {
+        Optional<AppUser> userOptional = userService.findById(id);
+        AppUser user = userOptional.get();
+        if (user.getPassword().equals(changPassForm.getOldPassword())) {
+            user.setPassword(changPassForm.getNewPassword());
+            userService.save(user);
+            Mail mail = new Mail();
+            mail.setMailTo(user.getEmail());
+            mail.setMailFrom("quarquizteam@gmail.com");
+            mail.setMailSubject("Password Change Successfully");
+            mail.setMailContent("Hi " + user.getUsername() + ",\n\n" +
+                    "Your password has been changed successfully!\n" +
+                    "Thank you for using our service, enjoy it!\n\n" +
+                    "Best,\n" +
+                    "quarquizzteam");
+            mailService.sendEmail(mail);
+            return new ResponseEntity<>(userOptional.get(), HttpStatus.ACCEPTED);
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("repassword not match"));
+        }
+    }
 
     @PutMapping("/admin/lock/{id}")
     public ResponseEntity<AppUser> lockAccountByIdUser(@PathVariable Long id) {

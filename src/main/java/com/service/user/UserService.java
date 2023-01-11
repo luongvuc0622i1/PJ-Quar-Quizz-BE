@@ -61,7 +61,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public AppUser findAppUserByEmail(String email) {
+    public Optional<AppUser> getUserByEmail(String email) {
         return userRepository.findAppUserByEmail(email);
     }
 

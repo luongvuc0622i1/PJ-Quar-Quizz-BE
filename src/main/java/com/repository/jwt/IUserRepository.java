@@ -6,16 +6,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface IUserRepository extends JpaRepository<AppUser, Long> {
     AppUser findByUsername(String username);
 
-    AppUser findAppUserByEmail(String email);
+    Optional<AppUser> findAppUserByEmail(String email);
 
 
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+//    @Query(nativeQuery = true, value = "SELECT * FROM users " +
+//            "WHERE email = :email;")
+//    Optional<AppUser> getUserByEmail(String email);
 
     @Query(nativeQuery = true, value = "SELECT * FROM users " +
             "JOIN users_roles ON users.id = users_roles.app_user_id " +

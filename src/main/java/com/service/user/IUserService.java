@@ -5,12 +5,14 @@ import com.service.IGeneralService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Optional;
+
 public interface IUserService extends IGeneralService<AppUser>, UserDetailsService {
     UserDetails loadUserByUsername(String username);
 
     AppUser getUserByUsername(String username);
 
-    AppUser findAppUserByEmail(String email);
+    Optional<AppUser> getUserByEmail(String email);
 
     boolean existsByUsername(String username);
 

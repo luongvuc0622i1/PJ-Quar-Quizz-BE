@@ -18,12 +18,12 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
-    public UserService() {
-    }
-
-    public UserService(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+//    public UserService() {
+//    }
+//
+//    public UserService(IUserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     @Override
     public Iterable<AppUser> findAll() {
@@ -33,10 +33,6 @@ public class UserService implements IUserService {
     @Override
     public Optional<AppUser> findById(Long id) {
         return userRepository.findById(id);
-    }
-
-    public Optional<AppUser> findByUser(String name) {
-        return Optional.ofNullable(userRepository.findByUsername(name));
     }
 
     @Override
@@ -73,11 +69,6 @@ public class UserService implements IUserService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public AppUser findByUsername(String username) {
-        return userRepository.findByUsername(username);
     }
 
     @Override

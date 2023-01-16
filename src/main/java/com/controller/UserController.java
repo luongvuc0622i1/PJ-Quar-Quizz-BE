@@ -44,14 +44,14 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-//    @GetMapping("/users/{id}")
-//    public ResponseEntity<AppUser> findById(@PathVariable Long id) {
-//        Optional<AppUser> optional = userService.findById(id);
-//        if (!optional.isPresent()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(optional.get(), HttpStatus.OK);
-//    }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<AppUser> findById(@PathVariable Long id) {
+        Optional<AppUser> optional = userService.findById(id);
+        if (!optional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(optional.get(), HttpStatus.OK);
+    }
 
     @PutMapping("/user/changePassword/{id}")
     public ResponseEntity<?> changePassword(@PathVariable Long id, @Valid @RequestBody ChangePassForm changPassForm) {

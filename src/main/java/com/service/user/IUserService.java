@@ -18,8 +18,6 @@ public interface IUserService extends IGeneralService<AppUser>, UserDetailsServi
 
     boolean existsByEmail(String email);
 
-    AppUser findByUsername(String username);
-
     Iterable<AppUser> managerFindAll();
     Iterable<AppUser> adminFindAll();
     void openAccountById(Long id);
